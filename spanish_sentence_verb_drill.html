@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spanish Sentence Verb Drill</title>
+<style>
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --color-background-primary: #FFFFFF;
+    --color-background-secondary: #F4F2EC;
+    --color-text-primary: #1F1E1D;
+    --color-text-secondary: #6B6863;
+    --color-border-primary: #BFBCB5;
+    --color-border-secondary: #E2DFD8;
+    --color-border-tertiary: #ECEAE3;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+  }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+  .header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; gap: 1rem; flex-wrap: wrap; }
+  h1 { font-size: 18px; font-weight: 500; margin: 0; }
+  .nav-links { display: flex; gap: 14px; }
+  .nav-link { font-size: 13px; color: var(--color-text-secondary); text-decoration: none; }
+  .nav-link:hover { text-decoration: underline; }
+  .filter-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  .filter-row label { font-size: 13px; color: var(--color-text-secondary); }
+  .mod-select { font-size: 13px; padding: 5px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); }
+  .progress-bg { height: 5px; background: var(--color-background-secondary); border-radius: 99px; margin-bottom: 1.25rem; }
+  .progress-fill { height: 5px; background: #1D9E75; border-radius: 99px; transition: width 0.4s; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 2rem 1.5rem; text-align: center; min-height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+  .prompt-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .sentence { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1.6; }
+  .sentence-en { font-size: 14px; color: var(--color-text-secondary); margin-top: 14px; font-style: italic; }
+  .verb-select { font: inherit; font-weight: 500; padding: 3px 10px; border: 1px solid var(--color-border-primary); border-radius: 6px; background: var(--color-background-secondary); color: var(--color-text-primary); margin: 0 2px; cursor: pointer; min-width: 90px; }
+  .verb-select.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
+  .verb-select.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
+  .verb-select:disabled { cursor: default; opacity: 1; }
+  .feedback { text-align: center; font-size: 14px; min-height: 22px; margin-bottom: 0.75rem; }
+  .next-btn { display: block; width: 100%; padding: 11px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); font-size: 15px; color: var(--color-text-primary); cursor: pointer; }
+  .counter { font-size: 12px; color: var(--color-text-secondary); text-align: center; margin-top: 8px; }
+  .score-card { text-align: center; padding: 2rem 1rem; }
+  .score-big { font-size: 46px; font-weight: 500; color: #1D9E75; }
+  .score-sub { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
+  .stat-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
+  .stat { font-size: 12px; color: var(--color-text-secondary); }
+  .stat span { font-weight: 500; color: var(--color-text-primary); display: block; font-size: 20px; }
+  .restart-btn { margin-top: 1.25rem; display: inline-block; padding: 9px 22px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); font-size: 14px; cursor: pointer; color: var(--color-text-primary); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header-row">
+    <h1>Spanish sentence verb drill</h1>
+    <div class="nav-links">
+      <a class="nav-link" href="spanish_vocab_drill_multipart.html">Vocab →</a>
+      <a class="nav-link" href="spanish_verb_tense_drill.html">Tenses →</a>
+    </div>
+  </div>
+  <div class="filter-row">
+    <label>Distractors:</label>
+    <select class="mod-select" id="modeSelect" onchange="startQuiz()">
+      <option value="mixed" selected>Mixed</option>
+      <option value="form">Same verb, other forms</option>
+      <option value="verb">Other verbs</option>
+    </select>
+    <label>Length:</label>
+    <select class="mod-select" id="lengthSelect" onchange="startQuiz()">
+      <option value="10">10</option>
+      <option value="20" selected>20</option>
+      <option value="40">40</option>
+    </select>
+  </div>
+  <div class="progress-bg"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  <div id="main"></div>
+</div>
+
+<script>
+// ===== Verb conjugation engine (same model as spanish_verb_tense_drill.html) =====
+const VERBS = [
+  { es: "ser",   en: "to be",
+    presOverride: ["soy","eres","es","somos","sois","son"],
+    pretOverride: ["fui","fuiste","fue","fuimos","fuisteis","fueron"],
+    impOverride:  ["era","eras","era","éramos","erais","eran"],
+    subjPresOverride: ["sea","seas","sea","seamos","seáis","sean"] },
+  { es: "ir",    en: "to go",
+    presOverride: ["voy","vas","va","vamos","vais","van"],
+    pretOverride: ["fui","fuiste","fue","fuimos","fuisteis","fueron"],
+    impOverride:  ["iba","ibas","iba","íbamos","ibais","iban"],
+    subjPresOverride: ["vaya","vayas","vaya","vayamos","vayáis","vayan"] },
+  { es: "hacer", en: "to do, to make",
+    presOverride: ["hago","haces","hace","hacemos","hacéis","hacen"],
+    pretOverride: ["hice","hiciste","hizo","hicimos","hicisteis","hicieron"],
+    futStem: "har" },
+  { es: "ver",   en: "to see",
+    presOverride: ["veo","ves","ve","vemos","veis","ven"],
+    pretOverride: ["vi","viste","vio","vimos","visteis","vieron"],
+    impOverride:  ["veía","veías","veía","veíamos","veíais","veían"] },
+  { es: "dar",   en: "to give",
+    presOverride: ["doy","das","da","damos","dais","dan"],
+    pretOverride: ["di","diste","dio","dimos","disteis","dieron"],
+    subjPresOverride: ["dé","des","dé","demos","deis","den"] },
+  { es: "venir", en: "to come",
+    presOverride: ["vengo","vienes","viene","venimos","venís","vienen"],
+    pretOverride: ["vine","viniste","vino","vinimos","vinisteis","vinieron"],
+    futStem: "vendr" },
+  { es: "salir", en: "to leave",
+    presOverride: ["salgo","sales","sale","salimos","salís","salen"],
+    futStem: "saldr" },
+  { es: "poner", en: "to put",
+    presOverride: ["pongo","pones","pone","ponemos","ponéis","ponen"],
+    pretOverride: ["puse","pusiste","puso","pusimos","pusisteis","pusieron"],
+    futStem: "pondr" },
+  { es: "poder", en: "to be able to, can",
+    stemPres: "o-ue",
+    pretOverride: ["pude","pudiste","pudo","pudimos","pudisteis","pudieron"],
+    futStem: "podr" },
+  { es: "oír",   en: "to listen",
+    presOverride: ["oigo","oyes","oye","oímos","oís","oyen"],
+    pretOverride: ["oí","oíste","oyó","oímos","oísteis","oyeron"],
+    impOverride:  ["oía","oías","oía","oíamos","oíais","oían"],
+    futStem: "oir" },
+  { es: "incluir", en: "to include",
+    presOverride: ["incluyo","incluyes","incluye","incluimos","incluís","incluyen"],
+    pretOverride: ["incluí","incluiste","incluyó","incluimos","incluisteis","incluyeron"] },
+  { es: "trabajar", en: "to work" },
+  { es: "comprar",  en: "to buy" },
+  { es: "estudiar", en: "to study" },
+  { es: "ayudar",   en: "to help" },
+  { es: "visitar",  en: "to visit" },
+  { es: "escuchar", en: "to listen" },
+  { es: "llegar", en: "to arrive" },
+  { es: "buscar", en: "to look for" },
+  { es: "pagar",  en: "to pay" },
+  { es: "empezar",   en: "to start", stemPres: "e-ie" },
+  { es: "encontrar", en: "to find",  stemPres: "o-ue" },
+  { es: "jugar",     en: "to play",  stemPres: "u-ue" },
+  { es: "mostrar",   en: "to show",  stemPres: "o-ue" },
+  { es: "aprender", en: "to learn" },
+  { es: "correr",   en: "to run" },
+  { es: "volver", en: "to return", stemPres: "o-ue" },
+  { es: "perder", en: "to lose",   stemPres: "e-ie" },
+  { es: "leer", en: "to read" },
+  { es: "vivir",   en: "to live" },
+  { es: "recibir", en: "to receive" },
+  { es: "decidir", en: "to decide" },
+  { es: "pedir",    en: "to ask for", stemPres: "e-i",  stemPret: "e-i" },
+  { es: "preferir", en: "to prefer",  stemPres: "e-ie", stemPret: "e-i" },
+  { es: "seguir",   en: "to follow",  stemPres: "e-i",  stemPret: "e-i" },
+  { es: "morir",    en: "to die",     stemPres: "o-ue", stemPret: "o-u" },
+];
+
+const PRES_END = { ar: ["o","as","a","amos","áis","an"], er: ["o","es","e","emos","éis","en"], ir: ["o","es","e","imos","ís","en"] };
+const PRET_END = { ar: ["é","aste","ó","amos","asteis","aron"], er: ["í","iste","ió","imos","isteis","ieron"], ir: ["í","iste","ió","imos","isteis","ieron"] };
+const IMP_END  = { ar: ["aba","abas","aba","ábamos","abais","aban"], er: ["ía","ías","ía","íamos","íais","ían"], ir: ["ía","ías","ía","íamos","íais","ían"] };
+const FUT_END  = ["é","ás","á","emos","éis","án"];
+const COND_END = ["ía","ías","ía","íamos","íais","ían"];
+
+const PRONOUNS = ["yo","tú","él/ella/usted","nosotros","vosotros","ellos/ellas/ustedes"];
+const CMD_PRONOUNS = ["","tú","usted","nosotros","vosotros","ustedes"];
+const TENSE_LABELS = { pres: "Present", pret: "Preterite", imp: "Imperfect", fut: "Future", cond: "Conditional", cmdInformal: "Informal command", cmdFormal: "Formal command" };
+const TENSES = ["pres","pret","imp","fut","cond","cmdInformal","cmdFormal"];
+const IRREG_TU = { hacer:"haz", ir:"ve", poner:"pon", salir:"sal", ser:"sé", tener:"ten", venir:"ven", decir:"di" };
+
+function applyStem(stem, type) {
+  if (!type) return stem;
+  if (type === "o-ue") return stem.replace(/o([^o]*)$/, "ue$1");
+  if (type === "u-ue") return stem.replace(/u([^u]*)$/, "ue$1");
+  if (type === "e-ie") return stem.replace(/e([^e]*)$/, "ie$1");
+  if (type === "e-i")  return stem.replace(/e([^e]*)$/, "i$1");
+  if (type === "o-u")  return stem.replace(/o([^o]*)$/, "u$1");
+  return stem;
+}
+
+function computeSubj(v, baseStem, ending) {
+  if (v.subjPresOverride) return v.subjPresOverride.slice();
+  const arSpell = s => {
+    if (s.endsWith("c")) return s.slice(0, -1) + "qu";
+    if (s.endsWith("g")) return s.slice(0, -1) + "gu";
+    if (s.endsWith("z")) return s.slice(0, -1) + "c";
+    return s;
+  };
+  let yoStem, nosStem;
+  if (v.presOverride) {
+    yoStem = v.presOverride[0].slice(0, -1);
+    nosStem = yoStem;
+  } else if (ending === "ar") {
+    yoStem = arSpell(applyStem(baseStem, v.stemPres));
+    nosStem = arSpell(baseStem);
+  } else if (ending === "er") {
+    yoStem = applyStem(baseStem, v.stemPres);
+    nosStem = baseStem;
+  } else {
+    yoStem = applyStem(baseStem, v.stemPres);
+    nosStem = v.stemPret ? applyStem(baseStem, v.stemPret) : baseStem;
+    if (baseStem.endsWith("gu")) {
+      yoStem = yoStem.slice(0, -1);
+      nosStem = nosStem.slice(0, -1);
+    }
+  }
+  const sEnd = (ending === "ar")
+    ? ["e","es","e","emos","éis","en"]
+    : ["a","as","a","amos","áis","an"];
+  return sEnd.map((e, i) => (i === 3 || i === 4 ? nosStem : yoStem) + e);
+}
+
+function conjugate(v) {
+  const inf = v.es;
+  const ending = inf.slice(-2);
+  const stem = inf.slice(0, -2);
+
+  const fStem = v.futStem || inf;
+  const fut  = FUT_END.map(e => fStem + e);
+  const cond = COND_END.map(e => fStem + e);
+
+  const imp = v.impOverride
+    ? v.impOverride.slice()
+    : IMP_END[ending].map(e => stem + e);
+
+  let pres;
+  if (v.presOverride) {
+    pres = v.presOverride.slice();
+  } else {
+    const endings = PRES_END[ending];
+    const cs = applyStem(stem, v.stemPres);
+    pres = endings.map((e, i) => {
+      const useChanged = (i !== 3 && i !== 4);
+      return (useChanged ? cs : stem) + e;
+    });
+    if (stem.endsWith("gu") && ending === "ir") {
+      const cs1 = applyStem(stem, v.stemPres);
+      pres[0] = cs1.slice(0, -1) + "o";
+    }
+  }
+
+  let pret;
+  if (v.pretOverride) {
+    pret = v.pretOverride.slice();
+  } else {
+    const endings = PRET_END[ending];
+    let yoStem = stem;
+    if (ending === "ar") {
+      if (stem.endsWith("c"))      yoStem = stem.slice(0, -1) + "qu";
+      else if (stem.endsWith("g")) yoStem = stem.slice(0, -1) + "gu";
+      else if (stem.endsWith("z")) yoStem = stem.slice(0, -1) + "c";
+    }
+    let thirdStem = stem;
+    if (ending === "ir" && v.stemPret) {
+      thirdStem = applyStem(stem, v.stemPret);
+    }
+    pret = endings.map((e, i) => {
+      if (i === 0) return yoStem + e;
+      if ((i === 2 || i === 5) && ending === "ir") return thirdStem + e;
+      return stem + e;
+    });
+    if ((ending === "er" || ending === "ir") && /[aeiou]$/.test(stem) && !/[gq]u$/.test(stem)) {
+      pret[1] = stem + "íste";
+      pret[2] = stem + "yó";
+      pret[3] = stem + "ímos";
+      pret[4] = stem + "ísteis";
+      pret[5] = stem + "yeron";
+    }
+  }
+
+  const subj = computeSubj(v, stem, ending);
+  const cmdTu = IRREG_TU[v.es] || pres[2];
+  const cmdVos = inf.slice(0, -1) + "d";
+  const cmdFormal   = [null, null, subj[2], null, null,   subj[5]];
+  const cmdInformal = [null, cmdTu, null,   null, cmdVos, null];
+
+  return { pres, pret, imp, fut, cond, cmdFormal, cmdInformal };
+}
+
+const VERB_TABLE = VERBS.map(v => ({ ...v, forms: conjugate(v) }));
+const VERB_BY_INF = Object.fromEntries(VERB_TABLE.map(v => [v.es, v]));
+
+// ===== Sentences (uses vocabulary from spanish_vocab_drill_multipart.html) =====
+// Each: [template with "{}" blank, English translation, infinitive, tense, person 0-5]
+const SENTENCES = [
+  // Present
+  ["Yo {} al gimnasio hoy.", "I'm going to the gym today.", "ir", "pres", 0],
+  ["Mi mamá {} a Marta con la tarea.", "My mom helps Marta with her homework.", "ayudar", "pres", 2],
+  ["Nosotros {} español en la escuela.", "We study Spanish at school.", "estudiar", "pres", 3],
+  ["Tú {} en la calle Mayor.", "You live on Mayor Street.", "vivir", "pres", 1],
+  ["Los niños {} al fútbol los sábados.", "The kids play soccer on Saturdays.", "jugar", "pres", 5],
+  ["Yo {} mucho los lunes.", "I work a lot on Mondays.", "trabajar", "pres", 0],
+  ["Mi hermana {} muchos libros.", "My sister reads many books.", "leer", "pres", 2],
+  ["Vosotros {} a vuestros amigos.", "You all visit your friends.", "visitar", "pres", 4],
+  ["El profesor {} la película con la clase.", "The teacher watches the movie with the class.", "ver", "pres", 2],
+  ["Yo {} a casa a las seis.", "I return home at six.", "volver", "pres", 0],
+  ["Mis abuelos {} en Madrid.", "My grandparents live in Madrid.", "vivir", "pres", 5],
+  ["¿Tú {} música clásica?", "Do you listen to classical music?", "escuchar", "pres", 1],
+  ["Yo {} muchos regalos en mi cumpleaños.", "I receive many gifts on my birthday.", "recibir", "pres", 0],
+  ["Mi papá {} la cena los domingos.", "My dad makes dinner on Sundays.", "hacer", "pres", 2],
+  ["Nosotros {} en el parque cada mañana.", "We run in the park every morning.", "correr", "pres", 3],
+
+  // Preterite
+  ["Ayer yo {} al cine con Marta.", "Yesterday I went to the cinema with Marta.", "ir", "pret", 0],
+  ["Mi papá {} la cena anoche.", "My dad made dinner last night.", "hacer", "pret", 2],
+  ["Nosotros {} una película el sábado.", "We watched a movie on Saturday.", "ver", "pret", 3],
+  ["El año pasado yo {} en Madrid.", "Last year I lived in Madrid.", "vivir", "pret", 0],
+  ["Tú {} un regalo a Ana.", "You gave a gift to Ana.", "dar", "pret", 1],
+  ["Los niños {} al parque ayer.", "The kids went to the park yesterday.", "ir", "pret", 5],
+  ["Anoche yo {} tarde a casa.", "Last night I arrived home late.", "llegar", "pret", 0],
+  ["Nosotros {} las llaves en la mesa.", "We found the keys on the table.", "encontrar", "pret", 3],
+  ["Ella {} una casa el mes pasado.", "She bought a house last month.", "comprar", "pret", 2],
+  ["Yo {} a tocar la guitarra a los diez años.", "I started playing the guitar at age ten.", "empezar", "pret", 0],
+
+  // Imperfect
+  ["Cuando yo {} niño, jugaba mucho.", "When I was a kid, I played a lot.", "ser", "imp", 0],
+  ["De pequeña, mi hermana {} al parque cada día.", "As a child, my sister went to the park every day.", "ir", "imp", 2],
+  ["Antes nosotros {} en Barcelona.", "We used to live in Barcelona.", "vivir", "imp", 3],
+  ["Mi abuelo {} libros todos los días.", "My grandfather used to read books every day.", "leer", "imp", 2],
+  ["Cuando éramos jóvenes, {} mucho.", "When we were young, we used to work a lot.", "trabajar", "imp", 3],
+
+  // Future
+  ["Mañana yo {} al gimnasio.", "Tomorrow I will go to the gym.", "ir", "fut", 0],
+  ["El año que viene tú {} inglés.", "Next year you will study English.", "estudiar", "fut", 1],
+  ["Mis amigos {} aquí pronto.", "My friends will arrive here soon.", "llegar", "fut", 5],
+  ["Nosotros {} una casa nueva el próximo año.", "We will buy a new house next year.", "comprar", "fut", 3],
+
+  // Conditional
+  ["Si pudiera, yo {} al cine todos los días.", "If I could, I would go to the cinema every day.", "ir", "cond", 0],
+  ["¿Tú {} español más rápido en España?", "Would you learn Spanish faster in Spain?", "aprender", "cond", 1],
+  ["Con más tiempo, nosotros {} más libros.", "With more time, we would read more books.", "leer", "cond", 3],
+
+  // Informal commands
+  ["¡{} la lección antes de la clase!", "Study the lesson before class!", "estudiar", "cmdInformal", 1],
+  ["¡{} más rápido!", "Run faster!", "correr", "cmdInformal", 1],
+  ["{} a casa con cuidado.", "Go home carefully.", "ir", "cmdInformal", 1],
+
+  // Formal commands
+  ["Por favor, {} al supermercado.", "Please go to the supermarket.", "ir", "cmdFormal", 2],
+  ["{} esto a su jefe.", "Show this to your boss.", "mostrar", "cmdFormal", 2],
+];
+
+// ===== Quiz logic =====
+let deck = [];
+let current = 0;
+let score = 0;
+let answered = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildDeck() {
+  const length = parseInt(document.getElementById('lengthSelect').value, 10);
+  return shuffle(SENTENCES).slice(0, length);
+}
+
+function startQuiz() {
+  deck = buildDeck();
+  current = 0; score = 0; answered = false;
+  renderQuestion();
+}
+
+function getChoices(answer, q) {
+  const mode = document.getElementById('modeSelect').value;
+  const useForm = mode === 'form' || (mode === 'mixed' && Math.random() < 0.5);
+  const candidates = new Set();
+  if (useForm) {
+    for (const t of TENSES) {
+      for (let p = 0; p < 6; p++) {
+        const f = q.verb.forms[t][p];
+        if (f != null && f !== answer) candidates.add(f);
+      }
+    }
+  } else {
+    for (const v of VERB_TABLE) {
+      if (v.es === q.verb.es) continue;
+      const f = v.forms[q.tense][q.person];
+      if (f != null && f !== answer) candidates.add(f);
+    }
+  }
+  const arr = shuffle([...candidates]).slice(0, 3);
+  return shuffle([answer, ...arr]);
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function renderQuestion() {
+  const total = deck.length;
+  document.getElementById('pbar').style.width = (current / total * 100) + '%';
+  if (current >= total) { renderScore(); return; }
+
+  const [template, english, inf, tense, person] = deck[current];
+  const verbObj = VERB_BY_INF[inf];
+  const answer = verbObj.forms[tense][person];
+  const q = { verb: verbObj, tense, person };
+  const choices = getChoices(answer, q);
+
+  const parts = template.split('{}');
+  const before = parts[0];
+  const after = parts[1] || '';
+  const isCmd = tense === 'cmdFormal' || tense === 'cmdInformal';
+  const personLabel = isCmd ? CMD_PRONOUNS[person] : PRONOUNS[person];
+
+  const optsHtml = choices.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="card">
+      <div class="prompt-label">${TENSE_LABELS[tense]} — ${personLabel} — <em>${escapeHtml(inf)}</em></div>
+      <div class="sentence">${escapeHtml(before)}<select class="verb-select" id="verbSelect"><option value="">—</option>${optsHtml}</select>${escapeHtml(after)}</div>
+      <div class="sentence-en">${escapeHtml(english)}</div>
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" style="display:none" onclick="nextQ()">${current + 1 < total ? 'Next →' : 'See results →'}</button>
+    <div class="counter">${current + 1} of ${total}</div>
+  `;
+
+  document.getElementById('verbSelect').addEventListener('change', e => {
+    if (answered) return;
+    const chosen = e.target.value;
+    if (!chosen) return;
+    pick(chosen, answer);
+  });
+  answered = false;
+}
+
+function pick(chosen, answer) {
+  if (answered) return;
+  answered = true;
+  const correct = chosen === answer;
+  if (correct) score++;
+  const sel = document.getElementById('verbSelect');
+  sel.disabled = true;
+  sel.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById('fb');
+  fb.textContent = correct ? '✓ Correct!' : '✗ The answer was: ' + answer;
+  fb.style.color = correct ? '#0F6E56' : '#A32D2D';
+  document.getElementById('nxt').style.display = 'block';
+}
+
+function nextQ() { current++; renderQuestion(); }
+
+function renderScore() {
+  document.getElementById('pbar').style.width = '100%';
+  const pct = Math.round(score / deck.length * 100);
+  const msg = pct === 100 ? 'Perfect score!' : pct >= 70 ? 'Great work!' : pct >= 50 ? 'Keep practicing!' : 'Keep at it!';
+  document.getElementById('main').innerHTML = `
+    <div class="score-card">
+      <div style="font-size:14px;color:var(--color-text-secondary);margin-bottom:4px;">Quiz complete</div>
+      <div class="score-big">${score}/${deck.length}</div>
+      <div class="score-sub">${msg}</div>
+      <div class="stat-row">
+        <div class="stat"><span>${pct}%</span>accuracy</div>
+        <div class="stat"><span>${deck.length - score}</span>missed</div>
+      </div>
+      <button class="restart-btn" onclick="startQuiz()">Try again</button>
+    </div>
+  `;
+}
+
+startQuiz();
+</script>
+
+</body>
+</html>
