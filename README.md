@@ -7,3 +7,5 @@ Hi, my name is Daniel and these are some drills that I've built with the help of
 + [Verbs in Sentences](./spanish_sentence_verb_drill.html)
 
 I hope you find them as useful as I do.
+
+Vocabulary from [BYU-OHS](https://hs.byu.edu/) Span-061.
