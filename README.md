@@ -1,6 +1,6 @@
 # Spanish Drills
 
-Hi, my name is Daniel and these are some drills that I've built with the help of [Claude](https://claude.ai) to help myself learn Spanish. 
+Hi, these are some drills that I've built with the help of [Claude](https://claude.ai) to help myself learn Spanish. 
 
 + [Vocabulary](./spanish_vocab_drill_multipart.html)
 + [Verb Tenses](./spanish_verb_tense_drill.html)
